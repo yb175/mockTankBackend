@@ -1,0 +1,53 @@
+import express from "express";
+import cors from "cors";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import aiModel from "./aiResponse.js"; // aiModel should accept Buffer
+
+const app = express();
+
+// Enable CORS and JSON parsing
+app.use(cors());
+app.use(express.json({ limit: "50mb" }));
+
+// Test route
+app.get("/test", (req, res) => res.json({ message: "Server working" }));
+
+// HTTP + Socket.IO
+const httpServer = createServer(app);
+const io = new Server(httpServer, { cors: { origin: "*" } });
+
+io.on("connection", (socket) => {
+  console.log("Client connected:", socket.id);
+
+  // Receive full recording when stopped
+  socket.on("stop-recording", async (chunks) => {
+    try {
+      console.log("Received full audio chunks:", chunks.length);
+
+      // Convert base64 chunks to Buffers
+      const buffers = chunks.map(c => Buffer.from(c, "base64"));
+
+      // Combine all into single Buffer
+      const fullBuffer = Buffer.concat(buffers);
+
+      // Send to AI model
+      const transcription = await aiModel(fullBuffer);
+
+      // Send transcription back to frontend
+      socket.emit("transcription", transcription.transcription || transcription);
+    } catch (err) {
+      console.error("Error processing audio:", err);
+      socket.emit("transcription", "[Error processing audio]");
+    }
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected:", socket.id);
+  });
+});
+
+// Start server
+httpServer.listen(3000, () => {
+  console.log("Server running on port 3000");
+});

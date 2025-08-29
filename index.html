@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Transcription</title>
+  <style>
+    #output {
+      border: 1px solid #ccc;
+      padding: 10px;
+      width: 90%;
+      margin-top: 20px;
+      min-height: 50px;
+      font-family: sans-serif;
+      white-space: pre-wrap;
+    }
+    #toggleBtn {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <button id="toggleBtn">🎙 Start Recording</button>
+  <div id="output"></div>
+
+  <!-- Socket.IO -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script type="module">
+    const toggleBtn = document.getElementById("toggleBtn");
+    const output = document.getElementById("output");
+
+    let mediaRecorder = null;
+    let isRecording = false;
+    let audioChunks = [];
+
+    const socket = io("http://localhost:3000");
+
+    toggleBtn.addEventListener("click", async () => {
+      if (!isRecording) {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.addEventListener("dataavailable", (event) => {
+          if (event.data && event.data.size > 0) {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const base64Chunk = reader.result.split(",")[1];
+              audioChunks.push(base64Chunk);
+            };
+            reader.readAsDataURL(event.data);
+          }
+        });
+
+        mediaRecorder.start(1000); // 1-sec chunks
+        isRecording = true;
+        toggleBtn.innerText = "⏹ Stop Recording";
+      } else {
+        mediaRecorder.stop();
+        isRecording = false;
+        toggleBtn.innerText = "🎙 Start Recording";
+
+        // Show loading
+        output.innerText += "\n[Processing audio...]";
+
+        // Send all chunks to server
+        socket.emit("stop-recording", audioChunks);
+      }
+    });
+
+    socket.on("transcription", (text) => {
+      // Replace loading with actual transcription
+      output.innerText = output.innerText.replace("\n[Processing audio...]", "");
+      console.log(text);
+      output.innerText += "\n" + text;
+    });
+  </script>
+</body>
+</html>
