@@ -2,8 +2,8 @@ import express from "express";
 import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import aiModel from "./aiResponse.js"; // aiModel should accept Buffer
-import texToAi from "./submit_text_to_chat.js";
+import aiModel from "./Api/aiResponse.js"; // aiModel should accept Buffer
+import texToAi from "./Api/submit_text_to_chat.js";
 import dotenv from "dotenv";
 
 dotenv.config();
