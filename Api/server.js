@@ -3,15 +3,18 @@ import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import aiModel from "./aiResponse.js"; // aiModel should accept Buffer
+import texToAi from "./submit_text_to_chat.js";
+import dotenv from "dotenv";
 
+dotenv.config();
 const app = express();
 
 // Enable CORS and JSON parsing
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 
-// Test route
-app.get("/test", (req, res) => res.json({ message: "Server working" }));
+// Route Taking directly text 
+app.post("/submit_text_to_chat", texToAi) ; 
 
 // HTTP + Socket.IO
 const httpServer = createServer(app);
@@ -30,7 +33,7 @@ io.on("connection", (socket) => {
 
       // Combine all into single Buffer
       const fullBuffer = Buffer.concat(buffers);
-
+ 
       // Send to AI model
       const transcription = await aiModel(fullBuffer);
 
@@ -46,8 +49,8 @@ io.on("connection", (socket) => {
     console.log("Client disconnected:", socket.id);
   });
 });
-
+const PORT = process.env.PORT || 3000;
 // Start server
-httpServer.listen(3000, () => {
-  console.log("Server running on port 3000");
+httpServer.listen(PORT, () => {
+  console.log("Server running on port ", PORT);
 });

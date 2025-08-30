@@ -4,10 +4,14 @@
     "@google/generative-ai": "^0.24.1",
     "@gradio/client": "^1.17.1",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "mic": "^2.1.2",
     "node-fetch": "^3.3.2",
     "socket.io": "^4.8.1",
     "ws": "^8.18.3"
+  },
+  "scripts": {
+    "start": "node api/server.js"
   }
 }
