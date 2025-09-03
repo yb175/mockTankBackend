@@ -5,13 +5,13 @@ dotenv.config();
 const { Schema } = mongoose;
 
 const sessionSchema = new Schema({
-  wpm: Number,
-  res_length: Number,
-  clarityIdx: Number,
-  vocabRichness: Number,
-  engagement_score: Number,
-  confidence_score: Number,
-  investor_alignment: Number,
+  wpm: String,
+  res_length: String,
+  clarityIdx: String,
+  vocabRichness: String,
+  engagement_score: String,
+  confidence_score: String,
+  investor_alignment: String,
   createdAt: { type: Date, default: Date.now },
 });
 
