@@ -6,9 +6,9 @@ export default async function analyse(req, res) {
         const client = await Client.connect("yj134/analysis");
 
         const result = await client.predict(
-            "/analyze_from_text",
+            "/run_analysis_from_text",
             { json_text: JSON.stringify(req.body.conversation) },
-            "/analyze_from_text"
+            "/run_analysis_from_text"
         );
 
         res.send(result.data);
