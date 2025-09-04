@@ -42,18 +42,19 @@ app.get("/get_chats/:uid", async (req, res) => {
 app.post("/update_chats/:uid", async (req, res) => {
   try {
     const uid = req.params.uid;
+    const sessionData = req.body.sessions; // pura object
 
     const ans = await User.findOneAndUpdate(
-      { uid }, // find by uid
-      { $push: { sessions: req.body.sessions } }, // push new session
-      { new: true } // return updated doc
+      { uid },
+      { $push: { sessions: sessionData } }, // directly object push kar
+      { new: true }
     );
 
     if (!ans) {
       return res.status(404).send("User not found");
     }
 
-    res.send(ans);
+    res.status(200).json(ans);
   } catch (err) {
     res.status(500).send("The error is " + err.message);
   }
