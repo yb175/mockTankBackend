@@ -59,7 +59,29 @@ app.post("/update_chats/:uid", async (req, res) => {
     res.status(500).send("The error is " + err.message);
   }
 });
+// Get a specific session for a user
+app.get("/users/:uid/sessions/:sessionId", async (req, res) => {
+  try {
+    const { uid, sessionId } = req.params;
 
+    // Find user
+    const user = await User.findOne({ uid });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Find session by sessionId
+    const session = user.sessions.find((s) => s.sessionId === sessionId);
+    if (!session) {
+      return res.status(404).json({ error: "Session not found" });
+    }
+
+    res.json(session);
+  } catch (err) {
+    console.error("Error fetching session:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 app.post("/create_user", async (req, res) => {
   try {
     const existingUser = await User.findOne({ uid: req.body.uid });
