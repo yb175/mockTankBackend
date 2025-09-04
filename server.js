@@ -7,6 +7,7 @@ import texToAi from "./Api/submit_text_to_chat.js";
 import startChat from "./Api/startChat.js";
 import dotenv from "dotenv";
 import { User, main } from "./db/database.js";
+import analyse from "./Api/analyse.js";
 dotenv.config();
 const app = express();
 
@@ -18,6 +19,8 @@ app.use(express.json({ limit: "50mb" }));
 app.post("/submit_text_to_chat", texToAi);
 
 app.get("/start_chat", startChat);
+
+app.post("/analyse", analyse);
 
 app.get("/get_chats/:uid", async (req, res) => {
   try {
@@ -116,3 +119,35 @@ main()
   .catch((err) => {
     console.error("DB connection failed:", err);
   });
+
+//   async function updateChats(uid) {
+//   try {
+//     const response = await fetch(`http://localhost:3000/update_chats/${uid}`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         sessions: {
+//           wpm: "0.17",
+//           res_length: "10.00",
+//           clarityIdx: "69.8",
+//           vocabRichness: "0.900",
+//           engagement_score: "0",
+//           confidence_score: "0",
+//           investor_alignment: "0",
+//           createdAt: new Date().toISOString(), // 👈 ISO format bhejna best hai
+//         },
+//       }),
+//     });
+
+//     if (!response.ok) {
+//       throw new Error("Failed to update chats");
+//     }
+
+//     const data = await response.json();
+//     console.log("Updated user:", data);
+//   } catch (error) {
+//     console.error("Error updating chats:", error);
+//   }
+// }
