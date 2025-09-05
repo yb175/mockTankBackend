@@ -13,6 +13,7 @@ const app = express();
 
 // Enable CORS and JSON parsing
 app.use(cors());
+app.options("*", cors()); 
 app.use(express.json({ limit: "50mb" }));
 
 // Route Taking directly text
