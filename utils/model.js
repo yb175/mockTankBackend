@@ -1,7 +1,5 @@
 import { Client } from "@gradio/client";
 
-console.log("Connecting to model...");
-
 async function predict(inputAudio) {
   const audioClient = await Client.connect("yj134/investorbhai");
 
@@ -10,7 +8,6 @@ async function predict(inputAudio) {
     file: inputAudio, 
   });
 
-  console.log("Transcription:", transcription.data);
 
   // Step 2: Send text to chat
   const result = await audioClient.predict("/submit_text_to_chat", { 		

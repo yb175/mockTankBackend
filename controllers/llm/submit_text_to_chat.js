@@ -33,11 +33,13 @@ const texToAi = async (req, res) => {
     );
 
     // Send AI response back to frontend
-    res.json(result.data);
+    res.status(200).json({
+      success : true,
+      data : result.data
+  });
 
   } catch (err) {
-    console.error("Error in texToAi:", err);
-    res.status(500).json({ error: "Something went wrong" });
+    res.status(500).json({ success : false ,error: "Something went wrong" });
   }
 };
 

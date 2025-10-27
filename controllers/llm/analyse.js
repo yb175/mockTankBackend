@@ -11,7 +11,10 @@ export default async function analyse(req, res) {
             "/run_analysis_from_text"
         );
 
-        res.send(result.data);
+        res.status(200).json({
+            success : true,
+            data : result.data
+        });
     } catch (error) {
         console.error("Error in analyse function:", error);
         res.status(500).send({ error: error.message });
