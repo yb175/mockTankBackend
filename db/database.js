@@ -31,14 +31,14 @@ const userSchema = new Schema({
   sessions: [sessionSchema], // ek user ke multiple sessions
 });
 
-const User = mongoose.model("User", userSchema);
+const UserModel = mongoose.model("User", userSchema);
 
 async function main() {
   await mongoose.connect(
     process.env.MONGO_URI
   );
   console.log("MongoDB connected!");
-  return { User };
+  return { UserModel };
 }
 
-export { main, User };
+export { main, UserModel };

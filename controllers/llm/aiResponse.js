@@ -1,4 +1,4 @@
-import predict from "../functions/model.js"; // make sure this returns { transcription: "..." }
+import predict from "../../utils/model.js"; // make sure this returns { transcription: "..." }
 
 export default async function aiModel(audioBuffer) {
   console.log("Processing audio...");

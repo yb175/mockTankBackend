@@ -6,11 +6,13 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mic": "^2.1.2",
     "mongoose": "^8.18.0",
     "node-fetch": "^3.3.2",
     "socket.io": "^4.8.1",
     "uuid": "^11.1.0",
+    "validator": "^13.15.15",
     "ws": "^8.18.3"
   },
   "scripts": {
